@@ -1,0 +1,32 @@
+# WireGuard config for the MANAGER (the Mac / coordinator — behind NAT, dials
+# each box). Fill the <…> placeholders, save as manager.conf (gitignored), then:
+#   sudo wg-quick up ./manager.conf
+#
+# Fleet: 2x GH200 + 1x B200. One [Peer] block per box. To add another box, copy
+# a block, bump the address, point Endpoint at its public IP.
+
+[Interface]
+# This manager's own private key (from: ./gen-keys.sh manager -> keys/manager.key)
+PrivateKey = <MANAGER_PRIVATE_KEY>
+Address = 10.200.0.1/24
+
+[Peer]
+# gh200-1  (10.200.0.2)
+PublicKey = <GH200_1_PUBLIC_KEY>
+Endpoint = <GH200_1_PUBLIC_IP>:51820
+AllowedIPs = 10.200.0.2/32
+PersistentKeepalive = 25
+
+[Peer]
+# gh200-2  (10.200.0.3)
+PublicKey = <GH200_2_PUBLIC_KEY>
+Endpoint = <GH200_2_PUBLIC_IP>:51820
+AllowedIPs = 10.200.0.3/32
+PersistentKeepalive = 25
+
+[Peer]
+# b200  (10.200.0.4)
+PublicKey = <B200_PUBLIC_KEY>
+Endpoint = <B200_PUBLIC_IP>:51820
+AllowedIPs = 10.200.0.4/32
+PersistentKeepalive = 25

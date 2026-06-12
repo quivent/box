@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+boxd.log
+# wireguard secrets — never commit private keys or filled configs
+net/wireguard/keys/
+net/wireguard/*.conf
+!net/wireguard/*.conf.template

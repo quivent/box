@@ -1,0 +1,19 @@
+# WireGuard config for a BOX (a GPU host with a public IP — the listener).
+# Fill the <…> placeholders, save as box.conf (gitignored), then:
+#   sudo wg-quick up ./box.conf
+# Open UDP 51820 inbound in the host firewall / cloud security group.
+#
+# Star topology: the manager is the only peer. Boxes don't talk to each other
+# (matches "no peer-to-peer bus"). This box is 10.200.0.2; next boxes .3, .4…
+
+[Interface]
+# This box's own private key (from: ./gen-keys.sh b200  -> keys/b200.key)
+PrivateKey = <BOX_PRIVATE_KEY>
+Address = 10.200.0.2/24
+ListenPort = 51820
+
+[Peer]
+# The manager (the Mac / wherever the manager runs). It roams behind NAT, so
+# no Endpoint here — the box learns it from the manager's first handshake.
+PublicKey = <MANAGER_PUBLIC_KEY>
+AllowedIPs = 10.200.0.1/32

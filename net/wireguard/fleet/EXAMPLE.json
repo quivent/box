@@ -1,0 +1,8 @@
+{
+  "slot": "gh200-1",
+  "pubkey": "<paste contents of keys/gh200-1.pub>",
+  "public_ip": "<this box's public IP>",
+  "boxd_up": true,
+  "is_render": false,
+  "_note": "copy to fleet/<your-slot>.json, fill, commit+push. pubkey+IP only — never the BOXD_TOKEN."
+}

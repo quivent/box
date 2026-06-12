@@ -1,0 +1,32 @@
+[Unit]
+# boxd — the box daemon. The box's API surface for the controller: health,
+# event stream, job queue, and the front for the legacy inference runtime.
+# Absorbs the comfort-ui vite middleware domain by domain (the swap), per
+# ui/comfort-ui/docs/CONTRACT-INVENTORY.md.
+Description=boxd (box daemon — controller-facing API)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/quivent/render/box
+# Build the venv on first start, else ExecStart fails forever on a fresh box
+# (Restart=always would just respin the failure every 5s). Idempotent.
+ExecStartPre=/usr/bin/env bash -c 'test -x .venv/bin/python || { python3 -m venv .venv && .venv/bin/pip install -r requirements.txt; }'
+ExecStart=/home/ubuntu/quivent/render/box/.venv/bin/python -m boxd
+Restart=always
+RestartSec=5
+Environment=BOXD_PORT=9810
+Environment=BOXD_HOST=127.0.0.1
+# A box reachable through Caddy MUST gate auth — a 127.0.0.1 bind does not stop
+# a browser. Set BOXD_TOKEN here (or enforce the token at Caddy) before exposing.
+# Environment=BOXD_TOKEN=...
+#
+# Install as a USER unit (systemctl --user, like comfort-dev) so it runs
+# unprivileged. If installed system-wide instead, add User=/Group= — never let
+# the /u proxy and subprocess job runners run as root.
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
